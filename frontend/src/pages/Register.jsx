@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Activity } from 'lucide-react';
 
@@ -7,7 +7,6 @@ const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('Patient'); // Changed default to Receptionist/Patient or something. Wait, user roles in AuthContext were checked for Admin, Doctor, Receptionist. I'll default to Receptionist.
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,7 +17,7 @@ const Register = () => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-    const result = await register(name, email, password, role);
+    const result = await register(name, email, password, 'Patient');
     if (result.success) {
       navigate('/');
     } else {
@@ -105,23 +104,7 @@ const Register = () => {
               />
             </div>
 
-            <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
-                Role
-              </label>
-              <select
-                id="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm outline-none transition-all bg-white"
-                onFocus={e => e.target.style.borderColor = '#2563EB'}
-                onBlur={e => e.target.style.borderColor = '#D1D5DB'}
-              >
-                <option value="Admin">Admin</option>
-                <option value="Doctor">Doctor</option>
-                <option value="Receptionist">Receptionist</option>
-              </select>
-            </div>
+
 
             <button
               type="submit"
@@ -143,9 +126,9 @@ const Register = () => {
 
           <div className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold" style={{ color: '#2563EB' }}>
+            <a href="/login" className="font-semibold" style={{ color: '#2563EB' }}>
               Sign in
-            </Link>
+            </a>
           </div>
         </div>
       </div>
