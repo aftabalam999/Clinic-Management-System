@@ -17,7 +17,7 @@ const Register = () => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-    const result = await register(name, email, password, 'Patient');
+    const result = await register(name, email, password, 'Receptionist');
     if (result.success) {
       navigate('/');
     } else {

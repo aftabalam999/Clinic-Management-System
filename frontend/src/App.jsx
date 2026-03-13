@@ -21,7 +21,7 @@ const HomeResolver = () => {
     case 'Receptionist':
       return <Navigate to="/receptionist" replace />;
     default:
-      return <div>Access Denied</div>;
+      return <Navigate to="/receptionist" replace />;
   }
 };
 
