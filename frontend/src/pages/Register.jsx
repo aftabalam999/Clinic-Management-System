@@ -1,22 +1,24 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Activity } from 'lucide-react';
 
-const Login = () => {
+const Register = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('Patient'); // Changed default to Receptionist/Patient or something. Wait, user roles in AuthContext were checked for Admin, Doctor, Receptionist. I'll default to Receptionist.
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-    const result = await login(email, password);
+    const result = await register(name, email, password, role);
     if (result.success) {
       navigate('/');
     } else {
@@ -35,7 +37,7 @@ const Login = () => {
           <Activity size={36} style={{ color: '#2563EB' }} />
           <span className="text-3xl font-extrabold text-gray-900 tracking-tight">ClinicCare Hub</span>
         </div>
-        <p className="text-sm text-gray-500">Clinic Management System — Secure Login</p>
+        <p className="text-sm text-gray-500">Clinic Management System — Create Account</p>
       </div>
 
       {/* Card */}
@@ -51,6 +53,23 @@ const Login = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm outline-none transition-all"
+                onFocus={e => e.target.style.borderColor = '#2563EB'}
+                onBlur={e => e.target.style.borderColor = '#D1D5DB'}
+                placeholder="John Doe"
+              />
+            </div>
+
+            <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email address
               </label>
@@ -61,10 +80,9 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm outline-none transition-all"
-                style={{ '--tw-ring-color': '#2563EB' }}
                 onFocus={e => e.target.style.borderColor = '#2563EB'}
                 onBlur={e => e.target.style.borderColor = '#D1D5DB'}
-                placeholder="you@clinic.com"
+                placeholder="user@clinic.com"
                 autoComplete="email"
               />
             </div>
@@ -83,18 +101,26 @@ const Login = () => {
                 onFocus={e => e.target.style.borderColor = '#2563EB'}
                 onBlur={e => e.target.style.borderColor = '#D1D5DB'}
                 placeholder="••••••••"
-                autoComplete="current-password"
+                autoComplete="new-password"
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                <input type="checkbox" className="rounded border-gray-300" />
-                Remember me
+            <div>
+              <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+                Role
               </label>
-              <span className="text-sm font-medium cursor-pointer" style={{ color: '#2563EB' }}>
-                Forgot password?
-              </span>
+              <select
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm outline-none transition-all bg-white"
+                onFocus={e => e.target.style.borderColor = '#2563EB'}
+                onBlur={e => e.target.style.borderColor = '#D1D5DB'}
+              >
+                <option value="Admin">Admin</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Receptionist">Receptionist</option>
+              </select>
             </div>
 
             <button
@@ -109,17 +135,17 @@ const Login = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Signing in...
+                  Creating Account...
                 </>
-              ) : 'Sign In'}
+              ) : 'Sign Up'}
             </button>
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-600">
-            Don&apos;t have an account?{' '}
-            <a href="/register" className="font-semibold" style={{ color: '#2563EB' }}>
-              Sign up
-            </a>
+            Already have an account?{' '}
+            <Link to="/login" className="font-semibold" style={{ color: '#2563EB' }}>
+              Sign in
+            </Link>
           </div>
         </div>
       </div>
@@ -127,4 +153,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

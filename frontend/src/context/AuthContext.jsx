@@ -48,6 +48,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const register = async (name, email, password, role) => {
+    try {
+      const res = await axios.post('/auth/register', { name, email, password, role });
+      const newToken = res.data.token;
+      setToken(newToken);
+      localStorage.setItem('token', newToken);
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.error || 'Registration failed',
+      };
+    }
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -56,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );
